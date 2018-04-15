@@ -3,7 +3,7 @@ module CodeKindly
     class Dir
       class << self
         def all (path)
-          require 'fileutils'
+          require "fileutils"
           return [] unless ::Dir.exist?(path)
           files = ::Dir.entries(path)
           files.reject!{ |f| "." == f || ".." == f || ".DS_Store" == f || ".keep" == f }
@@ -11,7 +11,7 @@ module CodeKindly
         end
 
         def find (path)
-          require 'fileutils'
+          require "fileutils"
           all(path).select { |entry| ::File.directory?("#{path}/#{entry}") }
         end
       end

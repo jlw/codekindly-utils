@@ -22,6 +22,13 @@ Or install it yourself as:
 
     $ gem install codekindly-utils
 
+## Publishing
+
+```Shell
+be rake install
+gem push vendor/ruby/2.2.0/cache/codekindly-utils-0.0.x.gem
+```
+
 ## Usage
 
 I occasionally use these utilities in the main logic of an app, but usually

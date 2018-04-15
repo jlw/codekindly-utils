@@ -2,8 +2,8 @@ module CodeKindly
   module Utils
     class Boolean
       # modified from ActiveRecord::ConnectionAdapters::Column (4.2.9)
-      TRUE_VALUES  = [true, 1, '1', 't', 'T', 'true', 'TRUE', 'on', 'ON', 'y', 'yes']
-      FALSE_VALUES = [false, 0, '0', 'f', 'F', 'false', 'FALSE', 'off', 'OFF', 'n', 'no']
+      TRUE_VALUES  = [true, 1, "1", "t", "T", "true", "TRUE", "on", "ON", "y", "yes"]
+      FALSE_VALUES = [false, 0, "0", "f", "F", "false", "FALSE", "off", "OFF", "n", "no"]
 
       class << self
         def from (value)

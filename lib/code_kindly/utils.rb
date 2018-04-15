@@ -7,4 +7,4 @@ require_relative "utils/o_s"
 require_relative "utils/shell"
 
 require_relative "utils/active_record"
-require_relative "utils/database"
+require_relative "utils/s_q_l"
