@@ -20,7 +20,7 @@ module CodeKindly
           @default_connection_class ||= CodeKindly::Utils::ActiveRecord.default_connection_class
         end
 
-        def process (method_name, query, connection_class = nil)
+        def process (method_name, query, connection_class = NilClass)
           if query.is_a?(::ActiveRecord::Relation)
             connection_class = query.klass
             query = query.to_sql
@@ -29,10 +29,10 @@ module CodeKindly
               connection_class = CodeKindly::Utils::ActiveRecord.default_connection_class(connection_class)
             else
               connection_class = connection_class.class unless connection_class.is_a?(Class)
-              connection_class = nil if connection_class < ::ActiveRecord::Base
+              connection_class = NilClass if connection_class < ::ActiveRecord::Base
             end
-            connection_class ||= default_connection_class
           end
+          connection_class = default_connection_class if connection_class == NilClass
           connection_class.connection.send(method_name, query)
         end
       end
