@@ -1,58 +1,57 @@
 module CodeKindly
   module Utils
     class File
+      include Presence
+
       class << self
-        def all (path)
+        def all(path)
           CodeKindly::Utils::Dir.all path
         end
 
-        def choose_from_options (directory_path, h = nil)
-          require "highline"
-          h ||= HighLine.new
-          file_opts = file_options(directory_path)
-          return nil if file_opts.blank?
-          msg = "Select an existing file:"
-          file_opts.each do |k,v|
-            msg += "\n  #{k}: #{v}"
-          end
-          msg += "\n  0: None of the above"
-          option = h.ask(msg, Integer)
+        def choose_from_options(dir_path, h_l = nil)
+          require 'highline'
+          h_l ||= HighLine.new
+          file_opts = file_options(dir_path)
+          return nil if blank? file_opts
+          msg = file_opts.inject('') { |(k, v), m| m + "\n  #{k}: #{v}" }
+          option = h_l.ask("Select a file:#{msg}\n  0: None", Integer)
           file_path = file_opts.fetch(option, nil)
-          if file_path.present?
-            file_path = ::File.join(directory_path, file_path)
-          end
-          file_path
+          return if file_path.nil?
+          ::File.join(dir_path, file_path)
         end
 
-        def file_options (path)
-          require "map"
+        def file_options(path)
+          require 'map'
           options = Map.new
           key = 0
           find(path).each do |file|
-            options[key+=1] = file
+            options[key += 1] = file
           end
           options
         end
 
-        def find (path)
-          require "fileutils"
+        def find(path)
+          require 'fileutils'
           all(path).select { |entry| ::File.file?("#{path}/#{entry}") }
         end
 
-        def trash! (file_string)
-          require "open3"
-          stdin, stdout, stderr = Open3.popen3("ls #{file_string}")
-          if stdout.gets
-            # move to trash (or delete) existing downloaded files
-            # sudo gem install osx-trash (http://www.dribin.org/dave/blog/archives/2008/05/24/osx_trash/)
-            stdin, stdout, stderr = Open3.popen3("which trash")
-            trash = stdout.gets
-            command = case
-              when trash then "#{trash.strip} #{file_string}" # output of `which` has ending \n
-              when ::File.directory?("~/.Trash") then "mv #{file_string} ~/.Trash"
-              else "rm #{file_string}"
-            end
-            Kernel.system(command)
+        # move to trash (or delete) existing downloaded files
+        # sudo gem install osx-trash (http://www.dribin.org/dave/blog/archives/2008/05/24/osx_trash/)
+        def trash!(file_string)
+          Kernel.system(command_to_trash_files(file_string))
+        end
+
+        private
+
+        def command_to_trash_files(file_string)
+          require 'open3'
+          _stdin, stdout, _stderr = Open3.popen3("ls #{file_string}")
+          return if stdout.nil?
+          _stdin, stdout, _stderr = Open3.popen3('which trash')
+          trash = stdout.gets
+          if trash then "#{trash.chomp} #{file_string}"
+          elsif ::File.directory?('~/.Trash') then "mv #{file_string} ~/.Trash"
+          else "rm #{file_string}"
           end
         end
       end

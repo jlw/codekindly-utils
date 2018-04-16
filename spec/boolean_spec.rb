@@ -16,6 +16,7 @@ RSpec.describe CodeKindly::Utils::Boolean do
         "on"
       ].each do |value|
         expect( CodeKindly::Utils::Boolean.from(value) ).to be( true ), "for #{value.inspect} (#{value.class.name})"
+        expect( CodeKindly::Utils::Boolean.true?(value) ).to be( true ), "for #{value.inspect} (#{value.class.name})"
       end
     end
 
@@ -32,6 +33,7 @@ RSpec.describe CodeKindly::Utils::Boolean do
         "ofF"
       ].each do |value|
         expect( CodeKindly::Utils::Boolean.from(value) ).to be( false ), "for #{value.inspect} (#{value.class.name})"
+        expect( CodeKindly::Utils::Boolean.false?(value) ).to be( true ), "for #{value.inspect} (#{value.class.name})"
       end
     end
   end
