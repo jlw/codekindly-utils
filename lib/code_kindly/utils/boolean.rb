@@ -33,12 +33,12 @@ module CodeKindly
         end
 
         def is_false?(value)
-          deprecation :is_false?, :false?, '0.1.0'.freeze
+          deprecate :is_false?, :false?, :'0.1.0'
           false?(value)
         end
 
         def is_true?(value)
-          deprecation :is_true?, :true?, '0.1.0'.freeze
+          deprecate :is_true?, :true?, :'0.1.0'
           true?(value)
         end
       end

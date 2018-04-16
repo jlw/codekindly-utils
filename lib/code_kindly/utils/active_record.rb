@@ -6,9 +6,9 @@ module CodeKindly
 
       class << self
         def active_record_classes_by_connection
-          deprecation :active_record_classes_by_connection,
-                      :classes_by_connection,
-                      '0.1.0'.freeze
+          deprecate :active_record_classes_by_connection,
+                    :classes_by_connection,
+                    :'0.1.0'
           classes_by_connection
         end
 
@@ -40,7 +40,7 @@ module CodeKindly
         end
 
         def configurations
-          deprecation :configurations, :configs, '0.1.0'.freeze
+          deprecate :configurations, :configs, :'0.1.0'
           configs
         end
 

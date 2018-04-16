@@ -44,11 +44,8 @@ module CodeKindly
         private
 
         def command_to_trash_files(file_string)
-          require 'open3'
-          _stdin, stdout, _stderr = Open3.popen3("ls #{file_string}")
-          return if stdout.nil?
-          _stdin, stdout, _stderr = Open3.popen3('which trash')
-          trash = stdout.gets
+          return if Command.run("ls #{file_string}").result.nil?
+          trash = OS.which('trash')
           if trash then "#{trash.chomp} #{file_string}"
           elsif ::File.directory?('~/.Trash') then "mv #{file_string} ~/.Trash"
           else "rm #{file_string}"
