@@ -1,5 +1,5 @@
 module CodeKindly
-  module Util
+  module Utils
     class RakeTask
       def self.run (task)
         Rake::Task[task].reenable
