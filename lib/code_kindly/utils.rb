@@ -1,5 +1,7 @@
 require_relative 'utils/version'
 
+require_relative 'utils/deprecation'
+
 require_relative 'utils/boolean'
 require_relative 'utils/presence'
 
