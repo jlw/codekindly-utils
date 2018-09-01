@@ -12,5 +12,7 @@ require_relative 'utils/o_s'
 require_relative 'utils/rake_task'
 require_relative 'utils/shell'
 
-require_relative 'utils/active_record'
-require_relative 'utils/s_q_l'
+if Kernel.const_defined? :ActiveRecord
+  require_relative 'utils/active_record'
+  require_relative 'utils/s_q_l'
+end
