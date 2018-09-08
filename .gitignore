@@ -5,6 +5,7 @@
 /coverage/
 /doc/
 Gemfile.lock
+gemfiles/*.lock
 /pkg/
 .ruby-version
 /spec/reports/
