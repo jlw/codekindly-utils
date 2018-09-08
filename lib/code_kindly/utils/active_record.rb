@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
+require 'active_record'
+
 module CodeKindly
   module Utils
     class ActiveRecord
       include Deprecation
-      include Presence
+
+      Rails = Kernel.const_defined?(:Rails) ? ::Rails : nil
 
       class << self
         def active_record_classes_by_connection
@@ -28,17 +31,11 @@ module CodeKindly
         end
 
         def config(name = nil)
-          return unless active_record_available?
-          name ||= ::Rails.env
-          configs[name]
+          configs[name || default_name]
         end
 
         def configs
-          return unless active_record_available?
-          @configs ||= begin
-            config_file = ::Rails.root.join('config', 'database.yml')
-            YAML.load_file config_file
-          end
+          @configs ||= ::ActiveRecord::Base.configurations
         end
 
         def configurations
@@ -46,10 +43,8 @@ module CodeKindly
           configs
         end
 
-        # rubocop:disable Metrics/AbcSize
         def default_connection_class(connection = nil)
-          return unless active_record_available?
-          connection ||= ::Rails.env
+          connection ||= default_name
           @default_connection_class ||= {}.with_indifferent_access
           @default_connection_class[connection] ||= begin
             it = classes_by_connection.fetch(connection, []).first
@@ -58,15 +53,8 @@ module CodeKindly
             it
           end
         end
-        # rubocop:enable Metrics/AbcSize
 
         private
-
-        def active_record_available?
-          present? ::ActiveRecord
-        rescue NameError
-          raise NotImplementedError, 'ActiveRecord is not loaded.'
-        end
 
         def application_active_record_class?(klass)
           return false unless klass < ::ActiveRecord::Base
@@ -75,9 +63,13 @@ module CodeKindly
           true
         end
 
+        def default_name
+          @default_name ||= Rails.try(:env) || configs.keys.first || 'default'
+        end
+
         def find_classes
-          if ::Rails.env.development?
-            model_files = ::Rails.root.join('app', 'models').to_s + '/**/*.rb'
+          if Rails.try(:env).try(:development?)
+            model_files = Rails.root.join('app', 'models').to_s + '/**/*.rb'
             ::Dir.glob(model_files) { |f| require f }
           end
           ObjectSpace.each_object(Class).select do |klass|
@@ -92,7 +84,7 @@ module CodeKindly
             config_name = configs.keys.select do |k|
               configs[k]['database'] == klass.connection.current_database
             end.first
-            config_name ||= ::Rails.env
+            config_name ||= default_name
             sets[config_name] ||= []
             sets[config_name] << klass
           end
