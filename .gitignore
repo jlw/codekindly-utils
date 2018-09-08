@@ -1,10 +1,12 @@
-/.bundle/
+.bundle/
 .DS_Store
 /.yardoc
 /_yardoc/
 /coverage/
 /doc/
+Gemfile.lock
 /pkg/
+.ruby-version
 /spec/reports/
 /tmp/
 /vendor/ruby

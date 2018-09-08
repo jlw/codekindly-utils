@@ -1,14 +1,29 @@
+# frozen_string_literal: true
+
 module CodeKindly
   module Utils
     class OS
       class << self
-        def notify (message)
-          require "open3"
-          stdin, stdout, stderr = Open3.popen3("which terminal-notifier")
-          tn_path = stdout.gets
-          if tn_path.present?
-            Kernel.system("#{tn_path.chomp} -message \"#{message}\" -sound Submarine")
+        def notify(message)
+          return if terminal_notifier.nil?
+          Command.run [
+            terminal_notifier,
+            "-message \"#{message}\"",
+            '-sound Submarine'
+          ].join(' ')
+        end
+
+        def which(program)
+          Command.run("which #{program}").result
+        end
+
+        private
+
+        def terminal_notifier
+          unless instance_variable_defined? :@terminal_notifier
+            @terminal_notifer = which('terminal-notifier')
           end
+          @terminal_notifier
         end
       end
     end

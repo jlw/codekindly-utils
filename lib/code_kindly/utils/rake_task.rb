@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 module CodeKindly
   module Utils
     class RakeTask
-      def self.run (task)
+      def self.run(task)
         Rake::Task[task].reenable
         Rake::Task[task].invoke
       end
