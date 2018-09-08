@@ -1,12 +1,13 @@
-# encoding: UTF-8
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe CodeKindly::Utils do
-  it "has a version number" do
+  it 'has a version number' do
     expect(CodeKindly::Utils::VERSION).not_to be nil
   end
 
-  it "is frozen" do
+  it 'is frozen' do
     expect(CodeKindly::Utils::VERSION.frozen?).to be true
   end
 end

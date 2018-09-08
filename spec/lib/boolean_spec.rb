@@ -1,39 +1,40 @@
-# encoding: UTF-8
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe CodeKindly::Utils::Boolean do
   describe :from do
-    it "knows truthy values" do
+    it 'knows truthy values' do
       [
         true,
-        "true",
-        "TrUe",
-        "t",
+        'true',
+        'TrUe',
+        't',
         1,
-        "1",
-        "y",
-        "YeS",
-        "on"
+        '1',
+        'y',
+        'YeS',
+        'on'
       ].each do |value|
-        expect( CodeKindly::Utils::Boolean.from(value) ).to be( true ), "for #{value.inspect} (#{value.class.name})"
-        expect( CodeKindly::Utils::Boolean.true?(value) ).to be( true ), "for #{value.inspect} (#{value.class.name})"
+        expect(CodeKindly::Utils::Boolean.from(value)).to be(true), "for #{value.inspect} (#{value.class.name})"
+        expect(CodeKindly::Utils::Boolean.true?(value)).to be(true), "for #{value.inspect} (#{value.class.name})"
       end
     end
 
-    it "knows falsey values" do
+    it 'knows falsey values' do
       [
         false,
-        "false",
-        "FaLsE",
-        "f",
+        'false',
+        'FaLsE',
+        'f',
         0,
-        "0",
-        "n",
-        "No",
-        "ofF"
+        '0',
+        'n',
+        'No',
+        'ofF'
       ].each do |value|
-        expect( CodeKindly::Utils::Boolean.from(value) ).to be( false ), "for #{value.inspect} (#{value.class.name})"
-        expect( CodeKindly::Utils::Boolean.false?(value) ).to be( true ), "for #{value.inspect} (#{value.class.name})"
+        expect(CodeKindly::Utils::Boolean.from(value)).to be(false), "for #{value.inspect} (#{value.class.name})"
+        expect(CodeKindly::Utils::Boolean.false?(value)).to be(true), "for #{value.inspect} (#{value.class.name})"
       end
     end
   end
