@@ -22,33 +22,15 @@ Or install it yourself as:
 
     $ gem install codekindly-utils
 
-## Publishing
-
-```Shell
-be rake install
-gem push vendor/ruby/2.2.0/cache/codekindly-utils-0.0.x.gem
-```
-
 ## Usage
 
 I occasionally use these utilities in the main logic of an app, but usually
 use them as conveniences in various rake tasks that are automated or part of my
 general workflow.
 
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. Then, run
-`rake spec` to run the tests. You can also run `bin/console` for an interactive
-prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`.
-To release a new version, update the version number in `version.rb`, and then
-run `bundle exec rake release`, which will create a git tag for the version,
-push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/jlw/codekindly-utils.
+Bug reports and pull requests are welcome, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
