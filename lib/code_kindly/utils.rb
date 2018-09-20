@@ -10,11 +10,11 @@ require_relative 'utils/presence'
 require_relative 'utils/command'
 require_relative 'utils/dir'
 require_relative 'utils/file'
-require_relative 'utils/o_s'
+require_relative 'utils/os'
 require_relative 'utils/rake_task'
 require_relative 'utils/shell'
 
 if Kernel.const_defined? :ActiveRecord
   require_relative 'utils/active_record'
-  require_relative 'utils/s_q_l'
+  require_relative 'utils/sql'
 end
