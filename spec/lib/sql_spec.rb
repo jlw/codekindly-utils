@@ -26,10 +26,23 @@ module CodeKindly
           expect(result.first).to eq('actor' => 'Anneke Wills', 'name' => 'Polly')
         end
 
+        it 'retrieves aggregates' do
+          result = CK::SQL.select_all('SELECT doctor_id, COUNT(*) AS c FROM companions GROUP BY doctor_id ORDER BY doctor_id DESC')
+          expect(result.count).to eq 2
+          expect(result.first).to eq('doctor_id' => @doctor2.id, 'c' => 1)
+        end
+
         it 'retrieves values with an ActiveRecord scope' do
           result = CK::SQL.select_all(Companion.where(doctor: @doctor1).select(:actor, :name).order(:actor))
           expect(result.count).to eq 3
           expect(result.first).to eq('actor' => 'Carole Ann Ford', 'name' => 'Susan Foreman')
+        end
+      end
+
+      describe :select_value do
+        it 'retrieves an aggregate' do
+          result = CK::SQL.select_value('SELECT COUNT(*) AS c FROM companions WHERE doctor_id = ' + @doctor2.id.to_s)
+          expect(result).to eq 1
         end
       end
 

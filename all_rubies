@@ -39,7 +39,7 @@ case "$1" in
     do
       echo "Bundle for Ruby $version"
       eval "$switcher $verb $version"
-      gem list --local bundler | grep bundler || gem install bundler --no-ri --no-rdoc
+      gem list --local bundler | grep bundler || gem install --no-ri --no-rdoc bundler
       bundle install --path vendor
       bundle update
     done
