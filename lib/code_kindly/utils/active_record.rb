@@ -67,17 +67,19 @@ module CodeKindly
           @default_name ||= Rails.try(:env) || configs.keys.first || 'default'
         end
 
+        # rubocop:disable Metrics/AbcSize
         def find_classes
           if Rails.try(:env).try(:development?)
             model_files = Rails.root.join('app', 'models').to_s + '/**/*.rb'
             ::Dir.glob(model_files) { |f| require f }
           end
           ObjectSpace.each_object(Class).select do |klass|
-            application_active_record_class?(klass)
+            klass.respond_to?(:name) &&
+              Presence.present?(klass.name) &&
+              application_active_record_class?(klass)
           end.sort_by(&:name)
         end
 
-        # rubocop:disable Metrics/AbcSize
         def find_classes_by_connection
           sets = {}.with_indifferent_access
           find_classes.each do |klass|
