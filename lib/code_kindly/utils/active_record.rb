@@ -7,7 +7,7 @@ module CodeKindly
     class ActiveRecord
       include Deprecation
 
-      Rails = Kernel.const_defined?(:Rails) ? ::Rails : nil
+      RAILS = Kernel.const_defined?(:Rails) ? ::Rails : nil
 
       class << self
         def active_record_classes_by_connection
@@ -64,13 +64,13 @@ module CodeKindly
         end
 
         def default_name
-          @default_name ||= Rails.try(:env) || configs.keys.first || 'default'
+          @default_name ||= RAILS.try(:env) || configs.keys.first || 'default'
         end
 
         # rubocop:disable Metrics/AbcSize
         def find_classes
-          if Rails.try(:env).try(:development?)
-            model_files = Rails.root.join('app', 'models').to_s + '/**/*.rb'
+          if RAILS.try(:env).try(:development?)
+            model_files = RAILS.root.join('app', 'models').to_s + '/**/*.rb'
             ::Dir.glob(model_files) { |f| require f }
           end
           ObjectSpace.each_object(Class).select do |klass|
