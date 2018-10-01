@@ -60,7 +60,10 @@ module CodeKindly
           return false unless klass < ::ActiveRecord::Base
           return false     if klass.abstract_class
           return false     if klass.name =~ /ActiveRecord::/
+          return false     if Presence.blank?(klass.name)
           true
+        rescue NoMethodError
+          false
         end
 
         def default_name
@@ -74,9 +77,7 @@ module CodeKindly
             ::Dir.glob(model_files) { |f| require f }
           end
           ObjectSpace.each_object(Class).select do |klass|
-            klass.respond_to?(:name) &&
-              Presence.present?(klass.name) &&
-              application_active_record_class?(klass)
+            application_active_record_class?(klass)
           end.sort_by(&:name)
         end
 
