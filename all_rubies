@@ -1,17 +1,22 @@
 #!/bin/bash
 
-versions=('2.2.10' '2.3.7' '2.4.4' '2.5.1')
+versions=('2.2.10' '2.3.8' '2.4.5' '2.5.3')
 
-switcher=`which rbenv`
+switcher=`which asdf`
 if [[ $switcher = *[!\ ]* ]]; then
-  verb="local"
+  verb="local ruby"
 else
-  switcher=`which rvm`
+  switcher=`which rbenv`
   if [[ $switcher = *[!\ ]* ]]; then
-    verb="use"
+    verb="local"
   else
-    echo "Please install rbenv or rvm"
-    exit 1
+    switcher=`which rvm`
+    if [[ $switcher = *[!\ ]* ]]; then
+      verb="use"
+    else
+      echo "Please install asdf, rbenv, or rvm"
+      exit 1
+    fi
   fi
 fi
 

@@ -2,6 +2,7 @@
 .DS_Store
 .rspec_status
 .ruby-version
+.tool-versions
 /_yardoc/
 /.yardoc
 /coverage/
