@@ -11,6 +11,7 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/jlw/co
 To run tests against all supported Ruby versions and all supported major dependency versions:
 
 ```Shell
+./all_rubies bundle
 ./all_rubies appraisal-install
 ./all_rubies appraisal-spec
 ```
