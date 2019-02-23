@@ -74,7 +74,12 @@ module CodeKindly
         def find_classes
           if RAILS.try(:env).try(:development?)
             model_files = RAILS.root.join('app', 'models').to_s + '/**/*.rb'
-            ::Dir.glob(model_files) { |f| require f }
+            ::Dir.glob(model_files) do |f|
+              klass = ::File.basename(f, '.rb').classify
+              next if Kernel.const_defined? klass
+
+              require f
+            end
           end
           ObjectSpace.each_object(Class).select do |klass|
             application_active_record_class?(klass)
