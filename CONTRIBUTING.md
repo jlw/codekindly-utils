@@ -4,7 +4,7 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/jlw/co
 
 ## Setup
 
-`bundle install --path vendor`
+`bundle install --path vendor/bundle`
 
 ## Run tests
 
@@ -32,5 +32,5 @@ To release a new version of the gem to RubyGems.org:
 
 ```Shell
 bundle exec rake install
-gem push vendor/ruby/2.5.0/cache/codekindly-utils-x.y.z.gem
+gem push pkg/codekindly-utils-x.y.z.gem
 ```
