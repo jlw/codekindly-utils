@@ -9,7 +9,7 @@ module CodeKindly
       end
 
       def blank?(value)
-        self.class.blank?(value)
+        ::CodeKindly::Utils::Presence.blank?(value)
       end
 
       def self.present?(value)
@@ -17,7 +17,7 @@ module CodeKindly
       end
 
       def present?(value)
-        self.class.present?(value)
+        ::CodeKindly::Utils::Presence.present?(value)
       end
     end
   end
