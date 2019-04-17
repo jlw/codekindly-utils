@@ -34,9 +34,18 @@ module CodeKindly
           configs[name || default_name]
         end
 
+        # rubocop:disable Security/YAMLLoad
         def configs
           @configs ||= ::ActiveRecord::Base.configurations
+          return @configs unless @configs == {}
+          return @configs unless RAILS.respond_to?(:root)
+
+          file = RAILS.root.join('config', 'database.yml')
+          return @configs unless ::File.readable?(file)
+
+          @configs = YAML.load(::File.read(file))
         end
+        # rubocop:enable Security/YAMLLoad
 
         def configurations
           deprecate :configurations, :configs, :'0.1.0'
@@ -61,6 +70,7 @@ module CodeKindly
           return false     if klass.abstract_class
           return false     if klass.name =~ /ActiveRecord::/
           return false     if Presence.blank?(klass.name)
+
           true
         rescue NoMethodError
           false
@@ -70,23 +80,14 @@ module CodeKindly
           @default_name ||= RAILS.try(:env) || configs.keys.first || 'default'
         end
 
-        # rubocop:disable Metrics/AbcSize
         def find_classes
-          if RAILS.try(:env).try(:development?)
-            model_files = RAILS.root.join('app', 'models').to_s + '/**/*.rb'
-            ::Dir.glob(model_files) do |f|
-              klass = ::File.basename(f, '.rb').classify
-              next if Kernel.const_defined? klass
-
-              require f
-            end
-          end
+          load_classes_in_development
           ObjectSpace.each_object(Class).select do |klass|
             application_active_record_class?(klass)
           end.sort_by(&:name)
         end
 
-        def find_classes_by_connection
+        def find_classes_by_connection # rubocop:disable Metrics/AbcSize
           sets = {}.with_indifferent_access
           find_classes.each do |klass|
             config_name = configs.keys.select do |k|
@@ -98,7 +99,18 @@ module CodeKindly
           end
           sets
         end
-        # rubocop:enable Metrics/AbcSize
+
+        def load_classes_in_development
+          return unless RAILS.try(:env).try(:development?)
+
+          model_files = RAILS.root.join('app', 'models').to_s + '/**/*.rb'
+          ::Dir.glob(model_files) do |f|
+            klass = ::File.basename(f, '.rb').classify
+            next if Kernel.const_defined? klass
+
+            require f
+          end
+        end
       end
     end
   end
