@@ -15,10 +15,12 @@ module CodeKindly
           h_l ||= HighLine.new
           file_opts = file_options(dir_path)
           return nil if blank? file_opts
+
           msg = file_opts.inject('') { |(k, v), m| m + "\n  #{k}: #{v}" }
           option = h_l.ask("Select a file:#{msg}\n  0: None", Integer)
           file_path = file_opts.fetch(option, nil)
           return if file_path.nil?
+
           ::File.join(dir_path, file_path)
         end
 
@@ -40,13 +42,17 @@ module CodeKindly
         # move to trash (or delete) existing downloaded files
         # sudo gem install osx-trash (http://www.dribin.org/dave/blog/archives/2008/05/24/osx_trash/)
         def trash!(file_string)
-          Kernel.system(command_to_trash_files(file_string))
+          command = command_to_trash_files(file_string)
+          return if command.nil?
+
+          Kernel.system(command)
         end
 
         private
 
         def command_to_trash_files(file_string)
           return if Command.run("ls #{file_string}").result.nil?
+
           trash = OS.which('trash')
           if trash then "#{trash.chomp} #{file_string}"
           elsif ::File.directory?('~/.Trash') then "mv #{file_string} ~/.Trash"
