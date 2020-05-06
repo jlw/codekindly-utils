@@ -3,8 +3,6 @@
 module CodeKindly
   module Utils
     class File
-      include Presence
-
       class << self
         def all(path)
           CodeKindly::Utils::Dir.all path
@@ -14,10 +12,10 @@ module CodeKindly
           require 'highline'
           h_l ||= HighLine.new
           file_opts = file_options(dir_path)
-          return nil if blank? file_opts
+          return nil if CodeKindly::Utils::Presence.blank? file_opts
 
-          msg = file_opts.inject('') { |(k, v), m| m + "\n  #{k}: #{v}" }
-          option = h_l.ask("Select a file:#{msg}\n  0: None", Integer)
+          msg = file_opts.map { |k, v| "\n  #{k}: #{v}" } + ["\n  0: None"]
+          option = h_l.ask("Select a file:#{msg.join}", Integer)
           file_path = file_opts.fetch(option, nil)
           return if file_path.nil?
 
