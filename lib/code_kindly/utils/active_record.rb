@@ -34,18 +34,21 @@ module CodeKindly
           configs[name || default_name]
         end
 
-        # rubocop:disable Security/YAMLLoad
-        def configs
+        def configs # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
           @configs ||= ::ActiveRecord::Base.configurations
+          if @configs.class.name == 'ActiveRecord::DatabaseConfigurations' # rubocop:disable Style/ClassEqualityComparison
+            @configs = @configs.configs_for.each_with_object({}) do |config, hash|
+              hash[config.env_name] = config.config
+            end
+          end
           return @configs unless @configs == {}
           return @configs unless RAILS.respond_to?(:root)
 
           file = RAILS.root.join('config', 'database.yml')
           return @configs unless ::File.readable?(file)
 
-          @configs = YAML.load(::File.read(file))
+          @configs = YAML.load(::File.read(file)) # rubocop:disable Security/YAMLLoad
         end
-        # rubocop:enable Security/YAMLLoad
 
         def configurations
           deprecate :configurations, :configs, :'0.1.0'
@@ -103,8 +106,7 @@ module CodeKindly
         def load_classes_in_development
           return unless RAILS.try(:env).try(:development?)
 
-          model_files = RAILS.root.join('app', 'models').to_s + '/**/*.rb'
-          ::Dir.glob(model_files) do |f|
+          ::Dir.glob(RAILS.root.join('app/models/**/*.rb').to_s) do |f|
             klass = ::File.basename(f, '.rb').classify
             next if Kernel.const_defined? klass
 
