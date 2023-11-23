@@ -38,7 +38,7 @@ module CodeKindly
           @configs ||= ::ActiveRecord::Base.configurations
           if @configs.class.name == 'ActiveRecord::DatabaseConfigurations' # rubocop:disable Style/ClassEqualityComparison
             @configs = @configs.configs_for.each_with_object({}) do |config, hash|
-              hash[config.env_name] = config.config
+              hash[config.env_name] = config&.configuration_hash || config&.config
             end
           end
           return @configs unless @configs == {}
