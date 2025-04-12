@@ -9,6 +9,7 @@ module CodeKindly
         def all(path)
           require 'fileutils'
           return [] unless ::Dir.exist?(path)
+
           files = ::Dir.entries(path)
           files.reject! { |f| SKIP_DIRS.include? f }
           files.sort

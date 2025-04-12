@@ -22,18 +22,23 @@ module CodeKindly
       describe :select_all do
         it 'retrieves values with SQL input' do
           result = CK::SQL.select_all('SELECT actor, name from companions ORDER BY actor')
+
           expect(result.count).to eq 4
           expect(result.first).to eq('actor' => 'Anneke Wills', 'name' => 'Polly')
         end
 
         it 'retrieves aggregates' do
-          result = CK::SQL.select_all('SELECT doctor_id, COUNT(*) AS c FROM companions GROUP BY doctor_id ORDER BY doctor_id DESC')
+          result = CK::SQL.select_all(
+            'SELECT doctor_id, COUNT(*) AS c FROM companions GROUP BY doctor_id ORDER BY doctor_id DESC'
+          )
+
           expect(result.count).to eq 2
           expect(result.first).to eq('doctor_id' => @doctor2.id, 'c' => 1)
         end
 
         it 'retrieves values with an ActiveRecord scope' do
           result = CK::SQL.select_all(Companion.where(doctor: @doctor1).select(:actor, :name).order(:actor))
+
           expect(result.count).to eq 3
           expect(result.first).to eq('actor' => 'Carole Ann Ford', 'name' => 'Susan Foreman')
         end
@@ -41,7 +46,8 @@ module CodeKindly
 
       describe :select_value do
         it 'retrieves an aggregate' do
-          result = CK::SQL.select_value('SELECT COUNT(*) AS c FROM companions WHERE doctor_id = ' + @doctor2.id.to_s)
+          result = CK::SQL.select_value("SELECT COUNT(*) AS c FROM companions WHERE doctor_id = '#{@doctor2.id}'")
+
           expect(result).to eq 1
         end
       end
@@ -49,12 +55,14 @@ module CodeKindly
       describe :select_values do
         it 'retrieves values with SQL input' do
           result = CK::SQL.select_values('SELECT actor from companions ORDER BY actor')
+
           expect(result.count).to eq(4), result.inspect
           expect(result.first).to eq 'Anneke Wills'
         end
 
         it 'retrieves values with an ActiveRecord scope' do
           result = CK::SQL.select_values(Companion.where(doctor: @doctor1).select(:actor).order(:actor))
+
           expect(result.count).to eq(3), result.inspect
           expect(result.first).to eq 'Carole Ann Ford'
         end

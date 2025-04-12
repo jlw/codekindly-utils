@@ -34,7 +34,7 @@ module CodeKindly
           configs[name || default_name]
         end
 
-        def configs # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+        def configs # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
           @configs ||= ::ActiveRecord::Base.configurations
           if @configs.class.name == 'ActiveRecord::DatabaseConfigurations' # rubocop:disable Style/ClassEqualityComparison
             @configs = @configs.configs_for.each_with_object({}) do |config, hash|
@@ -47,7 +47,7 @@ module CodeKindly
           file = RAILS.root.join('config', 'database.yml')
           return @configs unless ::File.readable?(file)
 
-          @configs = YAML.load(::File.read(file)) # rubocop:disable Security/YAMLLoad
+          @configs = YAML.load_file(file)
         end
 
         def configurations
@@ -71,7 +71,7 @@ module CodeKindly
         def application_active_record_class?(klass)
           return false unless klass < ::ActiveRecord::Base
           return false     if klass.abstract_class
-          return false     if klass.name =~ /ActiveRecord::/
+          return false     if klass.name.include?('ActiveRecord::')
           return false     if Presence.blank?(klass.name)
 
           true
@@ -93,9 +93,9 @@ module CodeKindly
         def find_classes_by_connection # rubocop:disable Metrics/AbcSize
           sets = {}.with_indifferent_access
           find_classes.each do |klass|
-            config_name = configs.keys.select do |k|
+            config_name = configs.keys.find do |k|
               configs[k]['database'] == klass.connection.current_database
-            end.first
+            end
             config_name ||= default_name
             sets[config_name] ||= []
             sets[config_name] << klass

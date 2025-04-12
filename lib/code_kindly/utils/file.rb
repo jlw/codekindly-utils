@@ -54,7 +54,8 @@ module CodeKindly
           trash = OS.which('trash')
           if trash then "#{trash.chomp} #{file_string}"
           elsif ::File.directory?('~/.Trash') then "mv #{file_string} ~/.Trash"
-          else "rm #{file_string}"
+          else
+            "rm #{file_string}"
           end
         end
       end

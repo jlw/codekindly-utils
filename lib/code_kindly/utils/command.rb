@@ -27,6 +27,7 @@ module CodeKindly
 
       def result
         return nil if blank? @std_out
+
         @std_out.chomp!
         blank? @std_out ? nil : @std_out
       end

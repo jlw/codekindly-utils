@@ -6,6 +6,7 @@ module CodeKindly
       class << self
         def notify(message)
           return if terminal_notifier.nil?
+
           Command.run [
             terminal_notifier,
             "-message \"#{message}\"",
@@ -20,9 +21,7 @@ module CodeKindly
         private
 
         def terminal_notifier
-          unless instance_variable_defined? :@terminal_notifier
-            @terminal_notifer = which('terminal-notifier')
-          end
+          @terminal_notifer = which('terminal-notifier') unless instance_variable_defined? :@terminal_notifier
           @terminal_notifier
         end
       end

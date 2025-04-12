@@ -1,4 +1,30 @@
+plugins:
+  - rubocop-performance
+
 AllCops:
+  TargetRubyVersion: 3.2
+  NewCops: enable
   Exclude:
     - 'gemfiles/**/*'
     - 'vendor/**/*'
+
+Gemspec/DevelopmentDependencies:
+  Enabled: false
+
+Layout/LineLength:
+  Max: 125
+  Exclude:
+    - 'codekindly-utils.gemspec'
+  AllowedPatterns: ['^ *# ']
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+
+Naming/FileName:
+  Exclude:
+    - 'codekindly-utils.gemspec'
+    - 'lib/codekindly-utils.rb'
+
+Style/Documentation:
+  Enabled: false

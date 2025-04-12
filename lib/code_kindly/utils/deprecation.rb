@@ -8,7 +8,7 @@ module CodeKindly
 
         def deprecate(old_m, new_m = nil, version = nil)
           msg = "[DEPRECATION] `#{old_m}` is deprecated"
-          version ? " and will be removed in version #{version}." : '.'
+          msg += version ? " and will be removed in version #{version}." : '.'
           msg += " Please use `#{new_m}` instead." if new_m
           warn msg
         end
